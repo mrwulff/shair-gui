@@ -15,6 +15,8 @@ import pygame
 from pygame.locals import *
 import os, sys
 from string import *
+from shutil import copyfile
+
 
 
 def load_image(name, colorkey=None):
@@ -59,19 +61,55 @@ clock = pygame.time.Clock()
 
 font = pygame.font.Font("fonts/BowlbyOneSC.ttf", 34)
 def get_data():
-    a=open('y://data.txt','r')
+    flag=0
+    album=''
+    artist=''
+    song=''
+    art=''
+
+    a=open('/tmp/data.txt','r')
+
+        
     for line in a.readlines():
         print line
         album,song,artist=split(line,'%%%')
+    
 
-    b=open('y://cover.txt','r')
-    for line in b.readlines():
-        #print line
-        c=split(line,'/')
-        art=c[2]
-    a.close()
-    b.close()
-    print 'omg'
+
+
+
+
+    try:
+        art=open('~/shair-gui/shair-gui/albumart/'+album+'.'+artist+'.png')
+        
+        flag=1
+        art='~/shair-gui/shair-gui/albumart/'+album+'.'+artist+'.png'
+    except:
+        flag=0
+    if flag==0:
+        
+        
+        b=open('/tmp/cover.txt','r')
+        for line in b.readlines():
+            #print line
+            c=split(line,'/')
+            art=c[2]
+
+
+        cc=os.path.getsize('/tmp/'+art)
+        print cc
+
+        if cc>10000:
+            copyfile('/tmp/'+art,'albumart/'+album+'.'+artist+'.png')
+            
+        
+            
+
+        
+
+        a.close()
+        b.close()
+        print 'omg'
     
         
     return album,song,artist,art
@@ -85,13 +123,12 @@ while True:
 	
 	time=time+1
 	print time
+	album,song,artist,art=get_data()
 	if time%1==0:
-		album,song,artist,art=get_data()
-		try:
-			art='y:/'+art
-		except:
-			art='tmp/'+art
-		album_image, album_rect = load_image(art)
+		
+		
+		album_image, album_rect = load_image('/tmp/'+art)
+		
 	for event in pygame.event.get():
 		if event.type == QUIT:
 			sys.exit()
@@ -159,7 +196,7 @@ while True:
 	song_txt = font.render(song, 2, (255, 255, 255))
 
 	album_image_rect = (000, 160)
-	album_image = pygame.transform.scale(album_image, (200,200))
+	album_image = pygame.transform.scale(album_image, (300,300))
 
 #        
 	artist_rect = artist_txt.get_rect()
