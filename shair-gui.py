@@ -63,7 +63,18 @@ def get_data():
     for line in a.readlines():
         print line
         album,song,artist=split(line,'%%%')
-    return album,song,artist
+
+    b=open('y://cover.txt','r')
+    for line in b.readlines():
+        #print line
+        c=split(line,'/')
+        art=c[2]
+    a.close()
+    b.close()
+    print 'omg'
+    
+        
+    return album,song,artist,art
         
 
 
@@ -73,8 +84,14 @@ while True:
 	clock.tick(1)
 	
 	time=time+1
-	if time%5==0:
-		album,song,artist=get_data()
+	print time
+	if time%1==0:
+		album,song,artist,art=get_data()
+		try:
+			art='y:/'+art
+		except:
+			art='tmp/'+art
+		album_image, album_rect = load_image(art)
 	for event in pygame.event.get():
 		if event.type == QUIT:
 			sys.exit()
