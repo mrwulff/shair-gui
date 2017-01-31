@@ -46,14 +46,15 @@ def event_processor(event_type, info):
 	elif event_type == decoder.COVERART:
 		cover_file = info.write_cover_file().name
 		print("Got Coverart, wrote it to {file} .".format(file = cover_file))
-		cc=open("tmp/cover.txt")
+		cc=open("/tmp/cover.txt",'w')
 		cc.write(cover_file)
 		cc.close()
 		
 	elif event_type == decoder.META:
 		print("Got Metadata,\n{meata}".format(meata=info.to_simple_string())) # lol, meat typo.
-		ff=open("tmp/data.txt",'w')
-		ff.write(meata)
+		ff=open("/tmp/data.txt",'w')
+		d=info.to_simple_string
+		ff.write(d)
 		ff.close()
 	#end if "switch event_type"
 #end def
