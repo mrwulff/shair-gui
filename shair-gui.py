@@ -14,6 +14,7 @@
 import pygame
 from pygame.locals import *
 import os, sys
+from string import *
 
 
 def load_image(name, colorkey=None):
@@ -57,10 +58,23 @@ album_image, album_rect = load_image("toypaj.png")
 clock = pygame.time.Clock()
 
 font = pygame.font.Font("fonts/BowlbyOneSC.ttf", 34)
+def get_data():
+    a=open('y://data.txt','r')
+    for line in a.readlines():
+        print line
+        album,song,artist=split(line,'%%%')
+    return album,song,artist
+        
+
 
 #mainloop
+time=0
 while True:
 	clock.tick(1)
+	
+	time=time+1
+	if time%5==0:
+		album,song,artist=get_data()
 	for event in pygame.event.get():
 		if event.type == QUIT:
 			sys.exit()
