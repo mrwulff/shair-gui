@@ -12,7 +12,7 @@ from luckydonaldUtils.encoding import to_unicode, to_binary
 from luckydonaldUtils.xml import etree_to_dict
 from luckydonaldUtils import py2, py3
 
-if py2
+if py2:
 	from base64 import decodestring as decodebytes
 	from base64 import encodestring as encodebytes
 else
