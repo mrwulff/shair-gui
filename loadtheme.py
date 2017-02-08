@@ -17,31 +17,6 @@ from shutil import copyfile
 import glob
 
 
-
-
-
-
-
-###private/var/mobile/Library/SpringBoard
-
-
-
-
-
-
-# Copyright 2011 Scrambled Code Studios
-# Licensed under GPL v3
-
-# Graphics under Creative Commons 3.0 attribution license
-
-# Fonts from Google Code are under their respective licenses
-
-# Requires:
-# Python interpreter: www.python.org
-# Pygame library: www.pygame.org
-
-# A simple chess clock program
-
 import pygame
 from pygame.locals import *
 import os, sys
@@ -49,6 +24,51 @@ from string import *
 from shutil import copyfile
 
 
+phone='k'
+phone='b'
+
+scale=4
+
+blur=1
+
+if phone=='k':
+    phonex=1242*scale
+    phoney=2208*scale
+    column=5
+    dock=5
+    icon_size=180*scale
+    dock_pos=1967
+    icon_offset=57
+    icon_spacing=237
+    icon_y_offset=120
+    icon_y_spacing=300
+
+
+    icon_d_spaciing=237
+    icon_d_offset=57
+if phone=='b':
+    phonex=750*scale
+    phoney=1334*scale
+    column=4
+    dock=5
+    icon_size=120*scale
+    dock_pos=1169*scale
+    #icon_offset=28
+    #icon_spacing=144
+    #icon_y_offset=176
+    #icon_y_spacing=156
+
+
+
+    icon_offset=53*scale
+    icon_spacing=174*scale
+    icon_y_offset=56*scale
+    icon_y_spacing=176*scale
+
+    icon_d_spacing=145*scale
+    icon_d_offset=25*scale
+
+    
 
 
 def generate_screen(dock,screen,pl,d,theme_name,directory):
@@ -56,13 +76,15 @@ def generate_screen(dock,screen,pl,d,theme_name,directory):
         #print dock[a]
 
         icon_image, icon_rect = load_image(d+dock[a]+'-large.png')
-        icon_image = pygame.transform.scale(icon_image, (180,180))
-        #pygame.display.update()
+        icon_image = pygame.transform.scale(icon_image, (icon_size,icon_size))
+        pygame.display.update()
 
 
-        
 
-        icon_rect = ((a*237)+57, 1967)
+            
+        icon_rect = ((a*icon_d_spacing)+icon_d_offset, dock_pos)
+
+
 
 
 
@@ -74,6 +96,11 @@ def generate_screen(dock,screen,pl,d,theme_name,directory):
         #icon_image2.fill((0, 0, 0, alpha), None, pygame.BLEND_RGBA_MULT)
         if d==directory:
             mask = pygame.image.load("mask.png").convert_alpha()
+            
+            mask = pygame.transform.scale(mask, (icon_size,icon_size))
+            print icon_image.get_width()
+            print mask.get_width()
+            
             icon_image = pgext.color.alphaMask(icon_image, mask, 1)
 
 
@@ -108,42 +135,39 @@ def generate_screen(dock,screen,pl,d,theme_name,directory):
                 #print page[a][b]
                 'hello'
                 icon_image, icon_rect = load_image(d+page[a][b]+'-large.png')
-                icon_image = pygame.transform.scale(icon_image, (180,180))
+                if phone=='k':
+                    
+                    icon_image = pygame.transform.scale(icon_image, (icon_size,icon_size))
+                if phone=='b':
+                    icon_image = pygame.transform.scale(icon_image, (icon_size,icon_size))
                 #icon_image = pygame.transform.set_alpha(50)
                 #pygame.display.update()
 
 
                 nb=b
                 
-                while nb>4:
-                    nb=nb-5
-                if b%5==0:
+                while nb>(column-1):
+                    nb=nb-column
+                if b%column==0:
                     y=y+1
                 #print nb*15,(y*160)+10,page[a][b]
 
 
-                
-                icon_rect = ((nb*237)+57, (y*300)+120)
-                #print d
+                icon_rect = ((nb*icon_spacing)+icon_offset, (y*icon_y_spacing)+icon_y_offset)
+                                #print d
                 if d==directory:
                     mask = pygame.image.load("mask.png").convert_alpha()
+                    mask = pygame.transform.scale(mask, (icon_size,icon_size))
                     icon_image = pgext.color.alphaMask(icon_image, mask, 1)
-                    #mask = pygame.transform.scale(mask, (180,180))
-                    #masked=icon_image.copy()
-                    #masked.blit(mask, (0, 0), None, pygame.BLEND_RGBA_MULT)
+
                     
                     screen.blit(icon_image, icon_rect)
-                    #screen.flip()
                 else:
                     screen.blit(icon_image, icon_rect)
 
             if type(page[a][b])==plistlib._InternalDict:
                 print 'FOLDER'
-                #print len((page[a][b]))
-                #for c in range(len(page[a][b])):
-                    #print (page[a][b][c])
-                #print (page[a][b]['iconLists'])
-                #print (page[a][b]['displayName'])
+
 
 def generate_gradient(from_color, to_color, height, width):
     channels = []
@@ -157,6 +181,7 @@ def generate_gradient(from_color, to_color, height, width):
     return numpy.dstack(channels)
 
 def load_image(name, colorkey=None):
+    print name
     fullname = os.path.join("", name)
     try:
         #image = pygame.image.load('picture/com.sopressata.imojistickers.png')
@@ -164,7 +189,7 @@ def load_image(name, colorkey=None):
         #pygame.image.set_alpha(50)
     except pygame.error, message:
         print 'Cannot load image:', name
-        image = pygame.image.load(name)
+        #image = pygame.image.load(name)
         image = pygame.image.load('picture/com.sopressata.imojistickers-large.png')
         #raise SystemExit, message
     image = image.convert_alpha()
@@ -193,15 +218,23 @@ def pilll(pl,img,cat,directory):
                 #print "OMGOMG"
                 nb=b
                 
-                while nb>4:
-                    nb=nb-5
-                if b%5==0:
+                while nb>column-1:
+                    nb=nb-column
+                if b%column==0:
                     y=y+1
-                sc=180
-                fx= (nb*237)+57
-                fy=(y*300)+120
+                sc=icon_size
+                fx= (nb*icon_spacing)+icon_offset
+                fy=(y*icon_y_spacing)+icon_y_offset
+               
                 if cat=="buttonBar":
-                    fy=fy+1976-120
+                    fy=fy+dock_pos-120
+                    if phone=='b':
+                        fy=fy
+                        
+                #icon_rect = ((nb*174)+54, (y*176)+56)
+
+
+
                 
                 img2=img.crop((fx,fy,fx+sc,fy+sc))
                 if page[a][b]=='com.apple.mobiletimer':
@@ -213,6 +246,7 @@ def pilll2(pl,img,cat,directory):
     
 
     page = pl[cat]
+    print page,'omg',len(page)
     #for a in range(len(page)):
     for a in range(len(page)):
         print 'page '+str(a)
@@ -224,9 +258,11 @@ def pilll2(pl,img,cat,directory):
                 #print "OMGOMG2"
 
 
-                fx= (a*237)+57
-                fy=1966
-                sc=180
+                fx= (a*icon_d_spacing)+icon_d_offset
+                fy=dock_pos
+                sc=icon_size
+
+                    
                 
                 img2=img.crop((fx,fy,fx+sc,fy+sc))
                 
@@ -275,8 +311,9 @@ def graphics(bg):
 
     pygame.init()
     pygame.display.init()
-    #screen = pygame.display.set_mode((800,480),FULLSCREEN)
-    screen = pygame.display.set_mode((1242,2208),pygame.SRCALPHA)
+
+
+    screen = pygame.display.set_mode((phonex,phoney),pygame.SRCALPHA)
     
     pygame.display.set_caption("Iphone")
 
@@ -284,7 +321,10 @@ def graphics(bg):
     rect = background.fill((200, 50, 250))
 
     clock_image, clock_rect = load_image(bg)
-    clock_image = pygame.transform.scale(clock_image, (1242,2208))
+
+    
+    clock_image = pygame.transform.scale(clock_image, (phonex,phoney))
+
     screen.blit(clock_image, clock_rect)
 
     #white = Color('pink')
@@ -303,7 +343,10 @@ def graphics(bg):
 
     #pl = plistlib.readPlist("IconSupportState.plist")
     #biplist.readPlist
-    pl = biplist.readPlist("IconSupportState.plist")
+    if phone=='k':
+        pl = biplist.readPlist("IconSupportState.plist.kevin")
+    if phone=='b':
+        pl = biplist.readPlist("IconSupportState.plist.britt")
     #dock = pl["buttonBar"]
     dock = pl["buttonBar"]
 
@@ -312,7 +355,7 @@ def graphics(bg):
 
     
     clock_image, clock_rect = load_image(bg)
-    clock_image = pygame.transform.scale(clock_image, (1242,2208))
+    clock_image = pygame.transform.scale(clock_image, (phonex,phoney))
     screen.blit(clock_image, clock_rect)
     
     
@@ -326,8 +369,8 @@ def graphics(bg):
     pygame.display.update()
     pygame.image.save(screen, "screenshot.jpeg")
     screen_image, screen_rect = load_image("screenshot.jpeg")
-    screen_image = pygame.transform.scale(screen_image, (int(1242*.7),int(2208*.75)))
-    screen.blit(screen_image, screen_rect)
+    screen_image = pygame.transform.scale(screen_image, (int(phonex*.75),int(phoney*.75)))
+    #screen.blit(screen_image, screen_rect)
 
     pygame.display.update()
 
@@ -342,9 +385,13 @@ def graphics(bg):
 
 
 
-
-    clock_image, clock_rect = load_image(bg)
-    clock_image = pygame.transform.scale(clock_image, (1242,2208))
+    newbg=raw_input('custom back ground')
+    clock_image, clock_rect = load_image(newbg)
+    if len(newbg)==0:
+        
+        clock_image, clock_rect = load_image(bg)
+    
+    clock_image = pygame.transform.scale(clock_image, (phonex,phoney))
 
     #mode = clock_image.mode
     #size = clock_image.size
@@ -353,20 +400,20 @@ def graphics(bg):
     pil_image = pygame.image.tostring(clock_image,'RGBA')
 
     print type(pil_image)
-    pil_image = Image.frombytes("RGBA",(1242,2208),pil_image)
+    pil_image = Image.frombytes("RGBA",(phonex,phoney),pil_image)
 
 
     #pil_image2 = Image.open(pil_image)
-
-    pil_image2=pil_image.filter(ImageFilter.BLUR)
+    pil_image2=pil_image
+    #pil_image2=pil_image.filter(ImageFilter.BLUR)
     i=0
-    while i<1:
+    while i<blur:
         pil_image2=pil_image2.filter(ImageFilter.GaussianBlur(10))
         i=i+1
         print i
     converter = ImageEnhance.Color(pil_image2)
-    pil_image2 = converter.enhance(0.1)
-    #py_image = pygame.image.fromstring(data, size, mode)
+    pil_image2 = converter.enhance(.5)
+    ####py_image = pygame.image.fromstring(data, size, mode)
     pil_image2.save('omg.jpg')
 
 
@@ -396,10 +443,11 @@ def graphics(bg):
     print 'ok'
     pygame.image.save(screen,directory5+'/bg.jpg')
     copyfile('index.html',directory5+'/index.html' )
-    copyfile('Info.plist',directory4a+'/index.html' )  
+    copyfile('Info.plist',directory4a+'/Info.plist' )  
     
     
     #os.system('img2.png')
+    
 
 def dire(b):
     
@@ -418,10 +466,15 @@ def dire(b):
 
 def main():
     a=raw_input('1?')
+    if a=='':
+        b='unnamed.jpg'
+        b='3.jpg'
+        graphics(b)
+        
     if a=='1':
         b=raw_input('file? ')
         if len(b)==0:
-            b='imgur/089_J8isla6.jpg'
+            b='unnamed'
         graphics(b)
     else:
         b=raw_input('directory?')
