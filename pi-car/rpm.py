@@ -18,9 +18,9 @@ print(response.value) # returns unit-bearing values thanks to Pint
 #print(response.value.to("mph")) # user-friendly unit conversions
 
 pygame.init()
-screen = pygame.display.set_mode((720, 480),pygame.FULLSCREEN)
+#screen = pygame.display.set_mode((720, 480),pygame.FULLSCREEN)
 #screen = pygame.display.set_mode((640, 480))
-#screen = pygame.display.set_mode((720,480))
+screen = pygame.display.set_mode((720,480))
 
 
 clock2 = pygame.time.Clock()
@@ -177,12 +177,16 @@ while not done:
     except:
 	rpms=rpms
     if rpms=="None":
-        rpms=str(random.randint(1000,6000))
+        rpms=str(random.randint(600,4000))
 
 
+    rpmst,junk=split(rpms,'.')
 
-    pp=random.randint(1,24)
-		# Update each LED color in the buffer.
+    print rpmst
+    pp=int(rpmst)/150
+    pp=int(pp)
+
+    print pp		# Update each LED color in the buffer.
     for i in range(pp,0,-1):
             # Pick a color based on LED position and an offset for animation.
             #color = DOT_COLORS[(i + offset) % len(DOT_COLORS)]
